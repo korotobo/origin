@@ -1,6 +1,6 @@
 #include <iostream>
 
-enum  Month {
+enum class Month {
     january = 1,
     february,
     march,
