@@ -15,7 +15,6 @@ public:
         return counter;
     }
 
-
     int resultCount() {return count;}
 
     int addCount() {count = ++count; return count;}
@@ -24,7 +23,6 @@ public:
 
 int main()
 {
-    int count;
     char command;
     std::string choiceInit;
     Counter counter;
@@ -33,8 +31,6 @@ int main()
     std::cin >> choiceInit;
 
     if(choiceInit == "да") counter = counter.counterWithParam();
-
-    std::cout << counter.resultCount() << std::endl;
 
     do {
         std::cout << "Введите команду ('+', '-', '=' или 'x'): ";
