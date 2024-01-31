@@ -17,8 +17,8 @@ public:
 
     int resultCount() {return count;}
 
-    int addCount() {count = ++count; return count;}
-    int subCount() {count = --count; return count;}
+    int addCount() {++count; return count;}
+    int subCount() {--count; return count;}
 };
 
 int main()
