@@ -36,7 +36,6 @@ int main()
         int houseNum;
         int apartNum;
         std::ofstream addressAft("out.txt");
-        Address address(strCity, strStreet, houseNum, apartNum);
 
         addressBef >> qtyAddress;
         addressAft << qtyAddress << std::endl;
