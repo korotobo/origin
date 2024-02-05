@@ -175,34 +175,5 @@ int main()
     s4.print();
     s5.print();
 
-    // Triangle *p1;
-    // p1 = &t1;
-    // p1->print();
-
-    // p1 = &t2;
-    // p1->print();
-
-    // p1 = &t3;
-    // p1->print();
-
-    // p1 = &t4;
-    // p1->print();
-
-    // Quadrangle *p2;
-    // p2 = &s1;
-    // p2->print();
-
-    // p2 = &s2;
-    // p2->print();
-
-    // p2 = &s3;
-    // p2->print();
-
-    // p2 = &s4;
-    // p2->print();
-
-    // p2 = &s5;
-    // p2->print();
-
     return 0;
 }
