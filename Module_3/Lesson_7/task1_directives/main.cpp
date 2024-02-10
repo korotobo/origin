@@ -1,4 +1,5 @@
 #include <iostream>
+#include "add.h"
 
 #define MODE 1
 
@@ -11,8 +12,7 @@ int main(int argc, char **argv)
 #if MODE == 0
     std::cout << "Работаю в режиме тренировки" << std::endl;
 
-#elif MODE == 1
-    #include "add.h"
+#elif MODE == 1  
     int a, b;
     std::cout << "Работаю в боевом режиме" << std::endl;
     std::cout << "Введите первое число: ";
