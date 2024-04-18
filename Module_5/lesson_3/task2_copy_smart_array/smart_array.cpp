@@ -5,6 +5,16 @@ SmartArray::SmartArray(const int size) {
     smart_array = new int[size] {};
 }
 
+SmartArray::SmartArray(const SmartArray& other){
+    this->size_array = other.size_array;
+    this->count = other.count;
+
+    smart_array = new int[other.size_array];
+    for(int i = 0; i < other.size_array; i++) {
+        this->smart_array[i] = other.smart_array[i];
+    }
+}
+
 void SmartArray::addElement(const int value)
 {
     if (count >= size_array)
@@ -16,7 +26,7 @@ void SmartArray::addElement(const int value)
 
 int SmartArray::getElement(const int index)
 {
-    if ((index >= size_array) || (index < 0))
+    if ((index >= count) || (index < 0))
     {
         throw std::out_of_range("Некорректный индекс элемента.");
     }

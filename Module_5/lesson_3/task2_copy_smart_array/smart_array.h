@@ -12,10 +12,11 @@ private:
 
 public:
     SmartArray(const int size);
+    SmartArray(const SmartArray& other);
+    SmartArray& operator=(const SmartArray&);
 
     void addElement(const int value);
     int getElement(const int index);
-    SmartArray& operator=(const SmartArray& smart_array);
     void printSmartArray();
 
     ~SmartArray();

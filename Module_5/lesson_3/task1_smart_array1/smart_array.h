@@ -12,6 +12,8 @@ private:
 
 public:
     SmartArray(const int size);
+    SmartArray(const SmartArray&) = delete;
+    SmartArray& operator=(const SmartArray&) = delete;
 
     void addElement(const int value);
     int getElement(const int index);

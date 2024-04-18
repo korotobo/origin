@@ -25,6 +25,8 @@ int main()
 
         arr1 = arr2;
 
+        SmartArray arr3(arr1);
+
         std::cout << "arr1 после копирования arr2: ";
         arr1.printSmartArray();
         std::cout << "Получим второй элемент массива: " << arr1.getElement(1) << std::endl;

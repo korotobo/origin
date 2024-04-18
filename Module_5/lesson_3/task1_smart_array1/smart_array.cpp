@@ -24,7 +24,7 @@ void SmartArray::addElement(const int value)
 
 int SmartArray::getElement(const int index)
 {
-    if ((index >= size_array) || (index < 0))
+    if ((index >= count) || (index < 0))
     {
         throw std::out_of_range("Некорректный индекс элемента.");
     }
