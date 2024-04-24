@@ -118,15 +118,15 @@ TEST_CASE("TEST_LIST", "[LIST]")
     SECTION("Проверка правильности работы функции PopBack на пустом списке")
     {
         INFO("Проверка правильности работы функции PopBack на пустом списке");
-        lst.PopBack();
-        CHECK(lst.Empty() == true);
+        CHECK(lst.Size() == 0);
+        CHECK_THROWS(lst.PopBack());
     };
 
     SECTION("Проверка правильности работы функции PopFront на пустом списке")
     {
         INFO("Проверка правильности работы функции PopFront на пустом списке");
-        lst.PopFront();
-        CHECK(lst.Empty() == true);
+        CHECK(lst.Size() == 0);
+        CHECK_THROWS(lst.PopFront());
     };
 
 };
