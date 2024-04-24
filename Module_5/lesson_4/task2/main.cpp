@@ -119,14 +119,14 @@ TEST_CASE("TEST_LIST", "[LIST]")
     {
         INFO("Проверка правильности работы функции PopBack на пустом списке");
         CHECK(lst.Size() == 0);
-        CHECK_THROWS(lst.PopBack());
+        REQUIRE_THROWS(lst.PopBack());
     };
 
     SECTION("Проверка правильности работы функции PopFront на пустом списке")
     {
         INFO("Проверка правильности работы функции PopFront на пустом списке");
         CHECK(lst.Size() == 0);
-        CHECK_THROWS(lst.PopFront());
+        REQUIRE_THROWS(lst.PopFront());
     };
 
 };
