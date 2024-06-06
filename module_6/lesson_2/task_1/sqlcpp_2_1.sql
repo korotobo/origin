@@ -35,11 +35,5 @@ CREATE TABLE IF NOT EXISTS collections_list (
 	id_collections_list SERIAL PRIMARY key,	
 	collection_name VARCHAR(40) NOT null,
 	collection_release_year VARCHAR(4) NOT null,
-	id_track_list INTEGER NOT NULL references track_list(id_track_list),
-	id_album_list INTEGER NOT NULL references album_list(id_album_list)
-);
-
-CREATE TABLE IF NOT EXISTS broker_album_track (
-	id_album_list INTEGER NOT NULL references album_list(id_album_list),
 	id_track_list INTEGER NOT NULL references track_list(id_track_list)
 );

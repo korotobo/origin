@@ -33,12 +33,12 @@ WHERE track_name LIKE '%мой%' or track_name like '%My%' or track_name like '%
 --Количество исполнителей в каждом жанре.
 SELECT genre_name, count(performer_name)
 FROM genres_list
-LEFT JOIN broker_genres_performers ON genres_list.id_genres_list = broker_genres_performers.id_genres_list
-LEFT JOIN performers_list ON performers_list.id_performers_list = genres_list.id_genres_list
+JOIN broker_genres_performers ON genres_list.id_genres_list = broker_genres_performers.id_genres_list
+JOIN performers_list ON performers_list.id_performers_list = genres_list.id_genres_list
 GROUP BY genre_name
 ORDER BY count(performer_name) desc;
 
---Количество треков, вошедших в альбомы 2019–2020 годов.
+--Количество треков, вошедшие в альбомы 2019–2020 годов.
 SELECT count(*)
 FROM track_list
 JOIN album_list ON album_list.id_album_list = track_list.id_album_list
@@ -58,11 +58,11 @@ JOIN broker_performers_album ON performers_list.id_performers_list = broker_perf
 JOIN album_list ON broker_performers_album.id_album_list = album_list.id_album_list
 WHERE album_release_year != '2020';
 
---Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами).
+--Названия сборников, в которых присутствует конкретный исполнитель.
 SELECT collection_name, performer_name
 FROM collections_list
-JOIN album_list ON collections_list.id_album_list = album_list.id_album_list
+JOIN track_list ON collections_list.id_track_list = track_list.id_track_list
+JOIN album_list ON track_list.id_album_list = album_list.id_album_list
 JOIN broker_performers_album ON album_list.id_album_list = broker_performers_album.id_album_list
 JOIN performers_list ON performers_list.id_performers_list = broker_performers_album.id_performers_list
 WHERE performer_name = 'Genix';
-
