@@ -1,0 +1,7 @@
+FROM fedora:latest
+    LABEL iliademchuk=""
+    RUN dnf install -y clang mc
+    WORKDIR /root/docker_reverse
+    COPY reverse.cpp .
+    RUN clang++ reverse.cpp -o reverse
+    CMD ["./reverse"]
