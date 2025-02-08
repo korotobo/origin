@@ -18,7 +18,7 @@ public:
 class FileCommand : public LogCommand {
 public:
     FileCommand() {
-        out.open("log.txt", std::ios::app);
+        out.open("filecommand.log", std::ios::app);
         if (!out.is_open()) {
             std::cout << "No log file found" << std::endl;
         }
