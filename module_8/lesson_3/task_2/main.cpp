@@ -73,16 +73,16 @@ private:
     std::ofstream out;
 };
 
-class FatalErrObserver : public Observer {
+class FatalErrorObserver : public Observer {
 public:
-    FatalErrObserver() {
+    FatalErrorObserver() {
         out.open("fatal_errors.log");
         if (!out.is_open()) {
             std::cout << "No log file found" << std::endl;
         }
     }
 
-    ~FatalErrObserver() {
+    ~FatalErrorObserver() {
         out.close();
     }
 
@@ -99,7 +99,7 @@ int main() {
     Observed object;
     WarningObserver warning;
     ErrorObserver error;
-    FatalErrObserver fatal;
+    FatalErrorObserver fatal;
 
     object.AddObserver(&warning);
     object.AddObserver(&error);
