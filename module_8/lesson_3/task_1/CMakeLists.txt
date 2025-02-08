@@ -5,6 +5,9 @@ project(task_1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/log.txt
+    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
 add_executable(task_1 main.cpp)
 
 include(GNUInstallDirs)
