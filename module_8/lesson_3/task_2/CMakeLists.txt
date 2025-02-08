@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/errors.log
-    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+    ${CMAKE_CURRENT_BINARY_DIR}/errors.log COPYONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/fatal_errors.log
-    ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)    
+    ${CMAKE_CURRENT_BINARY_DIR}/fatal_errors.log COPYONLY)    
 
 add_executable(task_2 main.cpp)
 
