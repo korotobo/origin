@@ -11,7 +11,7 @@ public:
 class MessageCommand : public LogCommand {
 public:
     void print(const std::string& message) override {
-        std::cout << "Console: " << message << '\n';
+        std::cout << "Console: " << message << std::endl;
     }
 };
 
@@ -20,7 +20,7 @@ public:
     FileCommand() {
         out.open("log.txt", std::ios::app);
         if (!out.is_open()) {
-            std::cout << "No log file found" << '\n';
+            std::cout << "No log file found" << std::endl;
         }
     }
 
@@ -30,7 +30,7 @@ public:
 
     void print(const std::string& message) override {
         if (out.is_open()) {
-            out << message << '\n';
+            out << message << std::endl;
         }
     }
 
