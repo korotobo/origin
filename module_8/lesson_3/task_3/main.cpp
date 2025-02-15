@@ -3,7 +3,7 @@
 #include <fstream>
 #include <stdexcept>
 
-enum class Type {
+enum class MessageType {
     Warning,
     Error,
     FatalError,
@@ -12,45 +12,57 @@ enum class Type {
 
 class LogMessage {
 public:
-    LogMessage(Type type, const std::string& text) : type_(type), text_(text) {}
-    
-    Type type() const {
+    LogMessage(MessageType type, const std::string& text) : type_(type), text_(text) {}
+
+    MessageType type() const {
         return type_;
     }
-    
+
     const std::string& message() const {
         return text_;
     }
 
 private:
-    Type type_;
+    MessageType type_;
     std::string text_;
 };
 
 class LogHandler {
 public:
-    LogHandler(LogHandler* handler = nullptr) : nextHandler(handler) {}
+    LogHandler(LogHandler* handler = nullptr) : next_(handler) {}
     virtual ~LogHandler() = default;
 
     void setNext(LogHandler* handler) {
-        nextHandler = handler;
+        next_ = handler;
     }
 
-    virtual void handleMessage(const LogMessage& message) = 0;
+    void receiveMessage(const LogMessage& msg) {
+        if (canHandle() == msg.type()) {
+            handleMessage(msg); // Обработали и закончили цепочку
+        } else if (next_) { // Если не обработали, то передаем следующему
+            next_->receiveMessage(msg);
+        } else {
+            // Никто не смог обработать сообщение, выбрасываем ошибку
+            throw std::runtime_error("Error: no handler for this message was found!");
+        }
+    }
 
 protected:
-    LogHandler* nextHandler;
+    virtual void handleMessage(const LogMessage& msg) = 0; // Вызвать обработчик
+    virtual MessageType canHandle() const = 0; // Может ли принять такой тип
+
+private:
+    LogHandler* next_;
 };
 
 class FatalError : public LogHandler {
-public:
-    void handleMessage(const LogMessage& message) override {
-        if (message.type() == Type::FatalError) {
-            std::cout << "Fatal Error" << std::endl;
-            throw std::runtime_error(message.message());
-        } else if (nextHandler) {
-            nextHandler->handleMessage(message);
-        }
+protected:
+    void handleMessage(const LogMessage& msg) override {
+        throw std::runtime_error(msg.message());
+    }
+
+    MessageType canHandle() const override {
+        return MessageType::FatalError;
     }
 };
 
@@ -69,12 +81,13 @@ public:
         }
     }
 
-    void handleMessage(const LogMessage& message) override {
-        if (message.type() == Type::Error) {
-            out << "Error: " << message.message() << std::endl;
-        } else if (nextHandler) {
-            nextHandler->handleMessage(message);
-        }
+protected:
+    void handleMessage(const LogMessage& msg) override {
+        out << "Error: " << msg.message() << std::endl;
+    }
+
+    MessageType canHandle() const override {
+        return MessageType::Error;
     }
 
 private:
@@ -82,32 +95,32 @@ private:
 };
 
 class Warning : public LogHandler {
-public:
-    void handleMessage(const LogMessage& message) override {
-        if (message.type() == Type::Warning) {
-            std::cout << "Warning: " << message.message() << std::endl;
-        } else if (nextHandler) {
-            nextHandler->handleMessage(message);
-        }
+protected:
+    void handleMessage(const LogMessage& msg) override {
+        std::cout << "Warning: " << msg.message() << std::endl;
+    }
+
+    MessageType canHandle() const override {
+        return MessageType::Warning;
     }
 };
 
 class Unknown : public LogHandler {
-public:
-    void handleMessage(const LogMessage& message) override {
-        if (message.type() == Type::Unknown) {
-            std::cout << "Unknown: " << message.message() << std::endl;
-        } else if (nextHandler) {
-            nextHandler->handleMessage(message);
-        }
+protected:
+    void handleMessage(const LogMessage& msg) override {
+        std::cout << "Unknown: " << msg.message() << std::endl;
+    }
+
+    MessageType canHandle() const override {
+        return MessageType::Unknown;
     }
 };
 
 int main() {
-    LogMessage log1(Type::Error, "This is an error");
-    LogMessage log2(Type::Warning, "This is a warning");
-    LogMessage log3(Type::Unknown, "Unknown message");
-    LogMessage log4(Type::FatalError, "This is a fatal error, program will be closed");
+    LogMessage log1(MessageType::Error, "This is an error");
+    LogMessage log2(MessageType::Warning, "This is a warning");
+    LogMessage log3(MessageType::Unknown, "Unknown message");
+    LogMessage log4(MessageType::FatalError, "This is a fatal error, program will be closed");
 
     FatalError fatalErrorHandler;
     Error errorHandler("error.log");
@@ -119,10 +132,10 @@ int main() {
     warningHandler.setNext(&unknownHandler);
 
     try {
-        fatalErrorHandler.handleMessage(log1);
-        fatalErrorHandler.handleMessage(log2);
-        fatalErrorHandler.handleMessage(log3);
-        fatalErrorHandler.handleMessage(log4); 
+        fatalErrorHandler.receiveMessage(log1);
+        fatalErrorHandler.receiveMessage(log2);
+        fatalErrorHandler.receiveMessage(log3);
+        fatalErrorHandler.receiveMessage(log4);
     } catch (const std::exception& ex) {
         std::cout << "Exception caught: " << ex.what() << std::endl;
     }

@@ -1,81 +1,105 @@
+#include <iostream>
 #include <fstream>
 #include <string>
-#include <stdexcept>
+#include <vector>
+#include <memory>
 
-class HTMLPrintable {
+class Report {
 public:
-    virtual std::string printAsHTML() const = 0;
+    std::string date;
+    std::string title;
+    std::string content;
+
+    Report(const std::string& date, const std::string& title, const std::string& content)
+        : date(date), title(title), content(content) {}
 };
 
-class TextPrintable {
+class Printer {
 public:
-    virtual std::string printAsText() const = 0;
+    virtual ~Printer() = default;
+    virtual std::string wrap_element(const std::string& data) const = 0;
+    virtual std::string wrap_report(const std::vector<std::string>& elements) const = 0;
 };
 
-class JSONPrintable {
+class PrinterHTML : public Printer {
 public:
-    virtual std::string printAsJSON() const = 0;
-};
+    std::string wrap_element(const std::string& data) const override {
+        return "<p>" + data + "</p>";
+    }
 
-class Data {
-public:
-    Data(std::string data) : data_(std::move(data)) {}
-    virtual ~Data() = default;
-
-protected:
-    std::string data_;
-};
-
-class TextData : public Data, public TextPrintable {
-public:
-    TextData(std::string data) : Data(std::move(data)) {}
-
-    std::string printAsText() const override {
-        return data_;
+    std::string wrap_report(const std::vector<std::string>& elements) const override {
+        std::string report = "<html><body>";
+        for (const auto& element : elements) {
+            report += element + "\n";
+        }
+        report += "</body></html>";
+        return report;
     }
 };
 
-class HTMLData : public Data, public HTMLPrintable {
+class PrinterJSON : public Printer {
 public:
-    HTMLData(std::string data) : Data(std::move(data)) {}
+    std::string wrap_element(const std::string& data) const override {
+        return "{ \"item\": \"" + data + "\" }";
+    }
 
-    std::string printAsHTML() const override {
-        return "<html>" + data_ + "</html>";
+    std::string wrap_report(const std::vector<std::string>& elements) const override {
+        std::string report = "[";
+        for (size_t i = 0; i < elements.size(); ++i) {
+            report += elements[i];
+            if (i < elements.size() - 1) {
+                report += ",";
+            }
+        }
+        report += "]";
+        return report;
     }
 };
 
-class JSONData : public Data, public JSONPrintable {
+class PrinterText : public Printer {
 public:
-    JSONData(std::string data) : Data(std::move(data)) {}
+    std::string wrap_element(const std::string& data) const override {
+        return data;
+    }
 
-    std::string printAsJSON() const override {
-        return "{ \"data\": \"" + data_ + "\" }";
+    std::string wrap_report(const std::vector<std::string>& elements) const override {
+        std::string report;
+        for (const auto& element : elements) {
+            report += element + "\n";
+        }
+        return report;
     }
 };
 
-void saveToText(std::ofstream &file, const TextPrintable& printable) {
-    file << printable.printAsText();
+class ReportFormatter {
+public:
+    void saveReportToFile(std::ofstream &file, const Report& report, std::shared_ptr<Printer> printer) {
+        std::vector<std::string> elements;
+        elements.push_back(printer->wrap_element(report.date));
+        elements.push_back(printer->wrap_element(report.title));
+        elements.push_back(printer->wrap_element(report.content));
+        file << printer->wrap_report(elements);
+    }
+};
+
+void saveReport(const std::string& filename, const Report& report, std::shared_ptr<Printer> printer) {
+    std::ofstream file(filename);
+    if (file.is_open()) {
+        ReportFormatter formatter;
+        formatter.saveReportToFile(file, report, printer);
+        file.close();
+    } else {
+        std::cerr << "Не удалось открыть файл " << filename << " для записи." << std::endl;
+    }
 }
 
-void saveToHTML(std::ofstream &file, const HTMLPrintable& printable) {
-    file << printable.printAsHTML();
-}
-
-void saveToJSON(std::ofstream &file, const JSONPrintable& printable) {
-    file << printable.printAsJSON();
-}
 
 int main() {
-    std::ofstream file("output.txt");
+    Report report("2023-10-01", "Отчет о продажах", "Содержание отчета...");
 
-    TextData textData("Hello, World!");
-    HTMLData htmlData("Hello, World!");
-    JSONData jsonData("Hello, World!");
+    saveReport("output.html", report, std::make_shared<PrinterHTML>());
+    saveReport("output.json", report, std::make_shared<PrinterJSON>());
+    saveReport("output.txt", report, std::make_shared<PrinterText>());
 
-    saveToText(file, textData);
-    saveToHTML(file, htmlData);
-    saveToJSON(file, jsonData);
-
-    file.close();
     return 0;
 }

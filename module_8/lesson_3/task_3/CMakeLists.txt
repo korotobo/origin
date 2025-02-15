@@ -5,8 +5,8 @@ project(task_3 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/error.log
-    ${CMAKE_CURRENT_BINARY_DIR}/error.log COPYONLY)
+# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/error.log
+#     ${CMAKE_CURRENT_BINARY_DIR}/error.log COPYONLY)
 
 add_executable(task_3 main.cpp)
 
