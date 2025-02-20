@@ -38,18 +38,17 @@ public:
 
     void receiveMessage(const LogMessage& msg) {
         if (canHandle() == msg.type()) {
-            handleMessage(msg); // Обработали и закончили цепочку
-        } else if (next_) { // Если не обработали, то передаем следующему
+            handleMessage(msg);
+        } else if (next_) {
             next_->receiveMessage(msg);
         } else {
-            // Никто не смог обработать сообщение, выбрасываем ошибку
             throw std::runtime_error("Error: no handler for this message was found!");
         }
     }
 
 protected:
-    virtual void handleMessage(const LogMessage& msg) = 0; // Вызвать обработчик
-    virtual MessageType canHandle() const = 0; // Может ли принять такой тип
+    virtual void handleMessage(const LogMessage& msg) = 0;
+    virtual MessageType canHandle() const = 0;
 
 private:
     LogHandler* next_;
