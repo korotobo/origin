@@ -13,6 +13,7 @@ public:
     void start();
     void stop();
     void reset();
+    void resetTimeOnly();
     double getLapTime();
 
 signals:

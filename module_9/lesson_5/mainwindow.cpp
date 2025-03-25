@@ -43,12 +43,12 @@ void MainWindow::onStartStopClicked()
 
 void MainWindow::onResetClicked()
 {
-    stopwatch->reset();
+    stopwatch->resetTimeOnly();
     ui->label_time->setText("0.0");
     ui->textBrowser->clear();
     lapCounter = 0;
-    ui->pb_startStop->setText("Старт");
-    ui->pb_lap->setEnabled(false);
+    // ui->pb_startStop->setText("Старт");
+    // ui->pb_lap->setEnabled(false);
 }
 
 void MainWindow::onLapClicked()

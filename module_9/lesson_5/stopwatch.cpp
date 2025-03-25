@@ -5,7 +5,7 @@ Stopwatch::Stopwatch(QObject *parent) : QObject(parent)
     timer = new QTimer(this);
     currentTime = 0.0;
     lastLapTime = 0.0;
-    timer->setInterval(100); // 100 миллисекунд
+    timer->setInterval(100);
     connect(timer, &QTimer::timeout, this, &Stopwatch::updateTime);
 }
 
@@ -22,6 +22,12 @@ void Stopwatch::stop()
 void Stopwatch::reset()
 {
     timer->stop();
+    currentTime = 0.0;
+    lastLapTime = 0.0;
+}
+
+void Stopwatch::resetTimeOnly()
+{
     currentTime = 0.0;
     lastLapTime = 0.0;
 }
